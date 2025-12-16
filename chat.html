@@ -13,7 +13,7 @@
             --bg-body: #121212; 
             --bg-sidebar: #181818; 
             --bg-main: #1F1F1F; 
-            --accent-primary: #D4A373;
+            --accent-primary: #D4A373; /* Gold */
             --text-main: #Eaeaea;
             --text-muted: #A0A0A0;
             --border-light: rgba(255, 255, 255, 0.08);
@@ -233,6 +233,7 @@
             animation: pulse-gold 2s infinite;
         }
 
+        /* --- COLORFUL MESSAGE STYLING (UPDATED) --- */
         .msg-content {
             padding-top: 0px;
             color: var(--text-main);
@@ -243,13 +244,58 @@
             justify-content: center;
         }
 
-        .msg-content h1, .msg-content h2, .msg-content h3 { color: #fff; font-weight: 600; margin-top: 20px; margin-bottom: 10px; font-size: 16px; }
+        /* 1. HEADERS: Make them GOLD (Pop out!) */
+        .msg-content h1, .msg-content h2, .msg-content h3 { 
+            color: var(--accent-primary); /* Gold color */
+            font-weight: 700; 
+            margin-top: 15px; 
+            margin-bottom: 8px; 
+            font-size: 17px; 
+            letter-spacing: 0.5px;
+        }
         .msg-content h3:first-child { margin-top: 0; }
-        .msg-content strong { color: var(--accent-primary); font-weight: 600; }
-        .msg-content p { margin-bottom: 12px; }
-        .msg-content ul, .msg-content ol { margin-left: 20px; margin-bottom: 15px; color: var(--text-muted); }
-        .msg-content li { margin-bottom: 6px; padding-left: 5px; }
 
+        /* 2. BOLD TEXT: Keep it Gold */
+        .msg-content strong { 
+            color: var(--accent-primary); 
+            font-weight: 700; 
+        }
+
+        /* 3. ITALICS: Make them Soft Sunset Yellow */
+        .msg-content em {
+            color: #ffe0b2; /* Light orange/yellow */
+            font-style: italic;
+        }
+
+        /* 4. LISTS: Fancy bullets */
+        .msg-content ul, .msg-content ol { 
+            margin-left: 20px; 
+            margin-bottom: 15px; 
+            color: var(--text-muted); 
+        }
+        .msg-content li { 
+            margin-bottom: 6px; 
+            padding-left: 5px; 
+        }
+        /* Color the bullet points themselves */
+        .msg-content li::marker {
+            color: var(--accent-primary);
+        }
+
+        /* 5. QUOTES: Add a Gold Border line */
+        .msg-content blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 15px;
+            margin: 10px 0;
+            color: #ccc;
+            background: rgba(212, 163, 115, 0.1); /* Subtle gold background */
+            border-radius: 0 8px 8px 0;
+            padding: 8px 15px;
+        }
+
+        .msg-content p { margin-bottom: 12px; }
+
+        /* User Message Specific Overrides */
         .user-msg-wrapper .msg-content ul, .user-msg-wrapper .msg-content ol {
             text-align: right; margin-right: 20px; margin-left: 0; list-style-position: inside;
         }
