@@ -1,9 +1,8 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv"; // Import dotenv to read .env file
+import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
@@ -11,7 +10,6 @@ app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: '10mb' })); 
 app.use(express.static(".")); 
 
-// Check if Key exists
 if (!process.env.GEMINI_API_KEY) {
     console.error("❌ ERROR: GEMINI_API_KEY is missing in .env file");
     process.exit(1);
@@ -38,7 +36,6 @@ FORMATTING RULES:
 
 app.post("/chat", async (req, res) => {
     try {
-        // Using the stable 1.5 Flash model
         const model = genAI.getGenerativeModel({ 
             model: "gemini-1.5-flash", 
             systemInstruction: SYSTEM_INSTRUCTION

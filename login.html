@@ -8,15 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette from chat.html */
-            --bg-body: #121212; 
-            --bg-card: #1F1F1F; 
+            --bg-body: #121212;
+            --bg-card: #1F1F1F;
             --input-bg: #2A2A2A;
-            
-            --accent-primary: #D4A373; /* Gold/Brown */
+
+            --accent-primary: #D4A373;
             --text-main: #Eaeaea;
             --text-muted: #A0A0A0;
-            
+
             --border-light: rgba(255, 255, 255, 0.08);
             --danger: #ff6b6b;
         }
@@ -40,10 +39,10 @@
         .container {
             background: var(--bg-card);
             padding: 40px;
-            border-radius: 16px; /* Matched radius */
+            border-radius: 16px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6); /* Matched shadow */
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             text-align: center;
             border: 1px solid var(--border-light);
         }
@@ -94,7 +93,7 @@
             width: 100%;
             padding: 12px;
             background: var(--accent-primary);
-            color: #121212; /* Dark text for contrast */
+            color: #121212;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -121,12 +120,11 @@
             font-weight: 600;
             text-decoration: none;
         }
-        
+
         .toggle-text span:hover {
             text-decoration: underline;
         }
 
-        /* Error Message Style */
         #error-msg {
             color: var(--danger);
             background: rgba(255, 107, 107, 0.1);
@@ -175,11 +173,9 @@
     </div>
 
     <script type="module">
-        // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Your Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyC7rpZAOb34iUbXU9J9CflXjTFKgXRIeRE",
             authDomain: "indiaexplorer-e89b8.firebaseapp.com",
@@ -189,11 +185,9 @@
             appId: "1:689958927158:web:0c4e58bf3cc9cae01a5197"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // DOM Elements
         const form = document.getElementById('authForm');
         const formTitle = document.getElementById('formTitle');
         const submitBtn = document.getElementById('submitBtn');
@@ -203,7 +197,6 @@
 
         let isSignUp = false;
 
-        // Toggle between Sign In and Sign Up
         toggleBtn.addEventListener('click', () => {
             isSignUp = !isSignUp;
             if (isSignUp) {
@@ -222,7 +215,6 @@
             errorMsg.style.display = 'none';
         });
 
-        // Handle Form Submit
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -230,38 +222,32 @@
             const name = document.getElementById('name').value;
 
             errorMsg.style.display = 'none';
-            submitBtn.textContent = "Processing..."; // UX feedback
+            submitBtn.textContent = "Processing...";
 
             try {
                 let userCredential;
 
                 if (isSignUp) {
-                    // --- SIGN UP LOGIC ---
                     userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
 
-                    // Add Name to Firebase Profile
                     await updateProfile(user, { displayName: name });
 
-                    // Save to LocalStorage
                     saveUserToLocal(name, email);
 
                 } else {
-                    // --- SIGN IN LOGIC ---
                     userCredential = await signInWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
 
-                    // Save to LocalStorage
                     saveUserToLocal(user.displayName || "User", email);
                 }
 
-                // Redirect to Home Page
                 window.location.href = "index.html";
 
             } catch (error) {
                 console.error(error);
                 showError(formatErrorMessage(error.code));
-                submitBtn.textContent = isSignUp ? "Sign Up" : "Sign In"; // Reset button text
+                submitBtn.textContent = isSignUp ? "Sign Up" : "Sign In";
             }
         });
 
@@ -286,7 +272,7 @@
                 case 'auth/wrong-password': return "Incorrect password.";
                 case 'auth/email-already-in-use': return "Email is already registered.";
                 case 'auth/weak-password': return "Password should be at least 6 characters.";
-                case 'auth/invalid-credential': return "Invalid email or password."; 
+                case 'auth/invalid-credential': return "Invalid email or password.";
                 default: return "An error occurred: " + code;
             }
         }
