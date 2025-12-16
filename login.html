@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - KolKatha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette from chat.html */
+            --bg-body: #121212; 
+            --bg-card: #1F1F1F; 
+            --input-bg: #2A2A2A;
+            
+            --accent-primary: #D4A373; /* Gold/Brown */
+            --text-main: #Eaeaea;
+            --text-muted: #A0A0A0;
+            
+            --border-light: rgba(255, 255, 255, 0.08);
+            --danger: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        .container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px; /* Matched radius */
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6); /* Matched shadow */
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: var(--text-main);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            background: var(--input-bg);
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder {
+            color: #555;
+            font-style: normal;
+        }
+
+        input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-primary);
+            color: #121212; /* Dark text for contrast */
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .toggle-text {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .toggle-text span {
+            color: var(--accent-primary);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .toggle-text span:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Message Style */
+        #error-msg {
+            color: var(--danger);
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 id="formTitle">Sign In</h2>
+        <p id="error-msg"></p>
+
+        <form id="authForm">
+            <div class="input-group hidden" id="nameGroup">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="e.g. Papia">
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••" required>
+            </div>
+
+            <button type="submit" id="submitBtn">Sign In</button>
+        </form>
+
+        <p class="toggle-text">
+            <span id="toggleBtn">Create an account</span>
+        </p>
+    </div>
+
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7rpZAOb34iUbXU9J9CflXjTFKgXRIeRE",
+            authDomain: "indiaexplorer-e89b8.firebaseapp.com",
+            projectId: "indiaexplorer-e89b8",
+            storageBucket: "indiaexplorer-e89b8.firebasestorage.app",
+            messagingSenderId: "689958927158",
+            appId: "1:689958927158:web:0c4e58bf3cc9cae01a5197"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // DOM Elements
+        const form = document.getElementById('authForm');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const nameGroup = document.getElementById('nameGroup');
+        const errorMsg = document.getElementById('error-msg');
+
+        let isSignUp = false;
+
+        // Toggle between Sign In and Sign Up
+        toggleBtn.addEventListener('click', () => {
+            isSignUp = !isSignUp;
+            if (isSignUp) {
+                formTitle.textContent = "Create Account";
+                submitBtn.textContent = "Sign Up";
+                toggleBtn.textContent = "Already have an account? Sign In";
+                nameGroup.classList.remove('hidden');
+                document.getElementById('name').setAttribute('required', 'true');
+            } else {
+                formTitle.textContent = "Sign In";
+                submitBtn.textContent = "Sign In";
+                toggleBtn.textContent = "Create an account";
+                nameGroup.classList.add('hidden');
+                document.getElementById('name').removeAttribute('required');
+            }
+            errorMsg.style.display = 'none';
+        });
+
+        // Handle Form Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+
+            errorMsg.style.display = 'none';
+            submitBtn.textContent = "Processing..."; // UX feedback
+
+            try {
+                let userCredential;
+
+                if (isSignUp) {
+                    // --- SIGN UP LOGIC ---
+                    userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Add Name to Firebase Profile
+                    await updateProfile(user, { displayName: name });
+
+                    // Save to LocalStorage
+                    saveUserToLocal(name, email);
+
+                } else {
+                    // --- SIGN IN LOGIC ---
+                    userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Save to LocalStorage
+                    saveUserToLocal(user.displayName || "User", email);
+                }
+
+                // Redirect to Home Page
+                window.location.href = "index.html";
+
+            } catch (error) {
+                console.error(error);
+                showError(formatErrorMessage(error.code));
+                submitBtn.textContent = isSignUp ? "Sign Up" : "Sign In"; // Reset button text
+            }
+        });
+
+        function saveUserToLocal(name, email) {
+            const userData = {
+                username: name,
+                email: email
+            };
+            localStorage.setItem("loggedInUser", JSON.stringify(userData));
+            localStorage.setItem("loggedIn", "true");
+        }
+
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+        }
+
+        function formatErrorMessage(code) {
+            switch (code) {
+                case 'auth/invalid-email': return "Invalid email address.";
+                case 'auth/user-not-found': return "No account found with this email.";
+                case 'auth/wrong-password': return "Incorrect password.";
+                case 'auth/email-already-in-use': return "Email is already registered.";
+                case 'auth/weak-password': return "Password should be at least 6 characters.";
+                case 'auth/invalid-credential': return "Invalid email or password."; 
+                default: return "An error occurred: " + code;
+            }
+        }
+    </script>
+</body>
+
+</html>

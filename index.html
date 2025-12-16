@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KolKatha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            /* Palette matched with chat.html */
+            --bg-body: #121212;
+            --bg-card: #1F1F1F;
+
+            --accent-primary: #D4A373;
+            /* Gold */
+            --text-main: #Eaeaea;
+            --text-muted: #A0A0A0;
+
+            --border-light: rgba(255, 255, 255, 0.08);
+            --danger: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .wrapper {
+            max-width: 1250px;
+            margin: 80px auto 80px;
+            background: var(--bg-card);
+            border-radius: 26px;
+            padding: 22px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        /* HERO */
+        .hero {
+            background: url('1.jpg') center/cover no-repeat;
+            border-radius: 22px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .85));
+        }
+
+        .hero-top {
+            position: absolute;
+            top: 26px;
+            left: 26px;
+            right: 26px;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            color: var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid var(--border-light);
+        }
+
+        .menu-btn i {
+            font-size: 10px;
+            color: var(--accent-primary);
+        }
+
+        .right-side {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 20px;
+            padding: 8px 16px;
+            min-width: 240px;
+            border: 1px solid var(--border-light);
+        }
+
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            flex: 1;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* PROFILE ICON */
+        .profile {
+            width: 35px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--accent-primary);
+        }
+
+        .profile:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* HERO CONTENT */
+        .hero-content {
+            position: absolute;
+            bottom: 35px;
+            left: 35px;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .hero-content h1 {
+            font-size: 36px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .hero-content p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .btn {
+            background: var(--accent-primary);
+            color: #121212;
+            border: 0;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* --- REDESIGNED CHAT TRIGGER --- */
+        .chatbox {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(18, 18, 18, 0.85);
+            /* Clean Dark bg */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 163, 115, 0.3);
+            /* Subtle gold border */
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            width: 150px;
+            transition: transform 0.2s;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .ai-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #121212;
+            font-size: 14px;
+        }
+
+        .chatbox a {
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .chatbox button {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chatbox button:hover {
+            background: var(--accent-primary);
+            color: #121212;
+        }
+
+        /* MAIN GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        /* LEFT SIDE */
+        .left h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .left p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .chips {
+            display: grid;
+            gap: 12px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .chip span {
+            background: var(--bg-body);
+            color: var(--text-muted);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+        }
+
+        /* RIGHT SIDE */
+        .right {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            min-height: 220px;
+            background-color: #2A2A2A;
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .Victoria {
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8)), url('Victoria Memorial.jpg') center/cover;
+        }
+
+        .Dakshineshwar {
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8)), url('Dakshineshwar.jpg') center/cover;
+        }
+
+        .Building {
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8)), url('Building.jpg') center/cover;
+        }
+
+        .Howrah {
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8)), url('HowrahBridge.jpg') center/cover;
+        }
+
+        .more {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(4px);
+            color: var(--accent-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* MODAL */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .profile-content {
+            background-color: #252525;
+            padding: 30px;
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .profile-pic-modal {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .profile-content h3 {
+            color: #fff;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .email-display {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        #logout {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        #logout:hover {
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .wrapper {
+                margin: 0;
+                border-radius: 0;
+                width: 100%;
+                height: 100%;
+                max-width: none;
+                border: none;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .right {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero {
+                height: 320px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .right {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 24px;
+            }
+
+            .chatbox {
+                display: none;
+            }
+
+            .search-box {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <section class="hero">
+            <div class="hero-top">
+                <div class="menu-btn">KolKatha <i class="fa-solid fa-circle"></i></div>
+                <div class="right-side">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search heritage..." />
+                    </div>
+                    <div class="profile" id="profile"><i class="fa-regular fa-user"></i></div>
+                </div>
+            </div>
+
+            <div id="profileModal" class="profile-modal">
+                <div class="profile-content">
+                    <i class="fa-solid fa-xmark close-btn"></i>
+                    <div class="profile-pic-modal"><i class="fa-solid fa-user"></i></div>
+                    <h3 id="userName">User Name</h3>
+                    <div class="email-display" id="userEmail">user@example.com</div>
+                    <button id="logout">Sign Out <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <h1>Discover Kolkata with an AI Heritage Guide</h1>
+                <p>Ask, explore, and uncover the stories behind Kolkata’s streets, monuments, and food.</p>
+                <a href="chat.html"><button class="btn">Start Exploring</button></a>
+            </div>
+
+            <div class="chatbox">
+                <div class="chat-header">
+                    <div class="ai-icon"><i class="fa-solid fa-robot"></i></div>
+                    <span>AI Guide</span>
+                </div>
+                <a href="chat.html"><button>Chat Now</button></a>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="left">
+                <h2>Explore Kolkata</h2>
+                <p>More than 100K people travel and experience the unexplored universe of the City of Joy.</p>
+                <div class="chips">
+                    <div class="chip" onclick="startChat('Presidency University')">
+                        Presidency University <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                    <div class="chip" onclick="startChat('Indian Museum')">
+                        Indian Museum <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                    <div class="chip" onclick="startChat('Kalighat Temple')">
+                        Kalighat Temple <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="card Victoria" onclick="startChat('Victoria Memorial')">
+                    <div class="more">Victoria Memorial</div>
+                </div>
+                <div class="card Dakshineshwar" onclick="startChat('Dakshineshwar Temple')">
+                    <div class="more">Dakshineshwar</div>
+                </div>
+                <div class="card Building" onclick="startChat('Writers Building')">
+                    <div class="more">Writers' Building</div>
+                </div>
+                <div class="card Howrah" onclick="startChat('Howrah Bridge')">
+                    <div class="more">Howrah Bridge</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const profileBtn = document.getElementById("profile");
+        const profileModal = document.getElementById("profileModal");
+        const closeModal = document.querySelector(".close-btn");
+        const logoutBtn = document.getElementById("logout");
+
+        profileBtn.addEventListener("click", () => {
+            const user = JSON.parse(localStorage.getItem("loggedInUser"));
+            const isLoggedIn = localStorage.getItem("loggedIn");
+            if (user && isLoggedIn === "true") {
+                document.getElementById("userName").textContent = user.username || "Traveler";
+                document.getElementById("userEmail").textContent = user.email || "No email";
+                profileModal.style.display = "flex";
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        closeModal.addEventListener("click", () => { profileModal.style.display = "none"; });
+        window.addEventListener("click", (e) => { if (e.target == profileModal) profileModal.style.display = "none"; });
+
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            localStorage.removeItem("loggedIn");
+            window.location.href = "login.html";
+        });
+
+        function startChat(topic) {
+            const isLoggedIn = localStorage.getItem("loggedIn");
+            if (!isLoggedIn || isLoggedIn !== "true") {
+                alert("Please log in to chat.");
+                window.location.href = "login.html";
+                return;
+            }
+            window.location.href = `chat.html?msg=${encodeURIComponent(topic)}`;
+        }
+
+        // ... existing code ...
+
+        // SEARCH FUNCTIONALITY
+        const searchInput = document.querySelector(".search-box input");
+
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                const query = searchInput.value.trim();
+                if (query) {
+                    startChat(query);
+                }
+            }
+        });
+
+        // Update the startChat function to handle the redirect properly
+        function startChat(topic) {
+            const isLoggedIn = localStorage.getItem("loggedIn");
+            if (!isLoggedIn || isLoggedIn !== "true") {
+                alert("Please log in to chat.");
+                window.location.href = "login.html";
+                return;
+            }
+            // Encode the message to handle spaces and special characters
+            window.location.href = `chat.html?msg=${encodeURIComponent(topic)}`;
+        }
+    </script>
+</body>
+
+</html>
