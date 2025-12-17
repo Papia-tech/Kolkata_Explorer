@@ -918,7 +918,7 @@
 
         const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
             ? "http://localhost:3000/chat"
-            : "https://kolkata-explorer.onrender.com/chat";
+            : "https://kolkata-explorer.onrender.com/chat"; // Use your actual Render URL here
 
         async function fetchReply(message) {
             const historyElements = document.querySelectorAll('.message .msg-content');
