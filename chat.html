@@ -918,7 +918,7 @@
 
         const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
             ? "http://localhost:3000/chat"
-            : "YOUR_DEPLOYED_BACKEND_URL_HERE/chat";
+            : "https://kolkata-explorer.onrender.com/chat";
 
         async function fetchReply(message) {
             const historyElements = document.querySelectorAll('.message .msg-content');
