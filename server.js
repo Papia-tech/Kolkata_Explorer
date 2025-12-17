@@ -30,10 +30,9 @@ app.post("/chat", async (req, res) => {
     }
 });
 
-// ✅ UPDATED FOR RENDER
 const PORT = process.env.PORT || 3000;
 
+// Change this line to include "0.0.0.0"
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`🌐 Accessible at 0.0.0.0:${PORT}`);
 });
