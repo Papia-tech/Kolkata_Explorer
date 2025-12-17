@@ -1,20 +1,20 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+import dotenv from "dotenv"; // ✅ Added to load environment variables
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// ✅ Initialize dotenv before using any process.env variables
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "*" })); 
-app.use(express.json({ limit: '10mb' })); 
-app.use(express.static(".")); 
+app.use(cors({ origin: "*" }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.static("."));
 
+// ✅ Use the environment variable
 if (!process.env.GEMINI_API_KEY) {
     console.error("❌ ERROR: GEMINI_API_KEY is missing in .env file");
-    process.exit(1);
 }
-
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const SYSTEM_INSTRUCTION = `
@@ -36,24 +36,25 @@ FORMATTING RULES:
 
 app.post("/chat", async (req, res) => {
     try {
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash", 
+        // ✅ Using the modern model your key supports
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash", 
             systemInstruction: SYSTEM_INSTRUCTION
         });
 
         let chatHistory = req.body.history || [];
         const userMessage = req.body.message;
-        const imageData = req.body.image; 
+        const imageData = req.body.image;
 
         if (chatHistory.length > 0 && chatHistory[0].role === 'model') {
-            chatHistory.shift(); 
+            chatHistory.shift();
         }
 
         const chat = model.startChat({ history: chatHistory });
 
         const msgParts = [];
         if (userMessage) msgParts.push({ text: userMessage });
-        
+
         if (imageData) {
             const match = imageData.match(/^data:(.+);base64,(.+)$/);
             if (match) {
@@ -74,9 +75,13 @@ app.post("/chat", async (req, res) => {
     } catch (err) {
         console.error("Gemini Error:", err);
         let errorMessage = "Connection error. Please try again!";
-        
+
         if (err.message.includes("429")) {
             errorMessage = "Traffic jam on Howrah Bridge! 🚕 Please wait 10 seconds.";
+        } else if (err.message.includes("404")) {
+             errorMessage = "Model not found. Please check the model name in server.js.";
+        } else if (err.message.includes("403")) {
+             errorMessage = "API Key error. Your key might be leaked or disabled.";
         }
 
         res.status(500).json({ reply: errorMessage, error: err.message });
